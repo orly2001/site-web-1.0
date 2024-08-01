@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Admin Dashboard</a>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/logout">Déconnexion</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container-fluid">
+        <div class="row">
+            <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+                <div class="sidebar-sticky">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/admin/dashboard">
+                                <i class="fas fa-tachometer-alt"></i>
+                                Tableau de bord
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/admin/users">
+                                <i class="fas fa-users"></i>
+                                Utilisateurs
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/admin/pages">
+                                <i class="fas fa-file-alt"></i>
+                                Pages
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/admin/media">
+                                <i class="fas fa-photo-video"></i>
+                                Média
+                            </a>
+                        </li>
+                        <!-- Ajoutez d'autres liens ici -->
+                    </ul>
+                </div>
+            </nav>
+
+            <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+                <h1 class="h2">Gestion du Site</h1>
+                <h2>Sections</h2>
+                <form action="/admin/add-section" method="POST">
+                    <div class="form-group">
+                        <label for="sectionTitle">Titre de la section</label>
+                        <input type="text" class="form-control" id="sectionTitle" name="title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="sectionContent">Contenu de la section</label>
+                        <textarea class="form-control" id="sectionContent" name="content" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="sectionImage">Image de la section</label>
+                        <input type="text" class="form-control" id="sectionImage" name="image">
+                    </div>
+                    <div class="form-group">
+                        <label for="sectionPage">Page de la section</label>
+                        <input type="text" class="form-control" id="sectionPage" name="page" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="sectionName">Nom de la section</label>
+                        <input type="text" class="form-control" id="sectionName" name="sectionName" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Ajouter la section</button>
+                </form>
+
+                <h2>Modifier les Sections Existantes</h2>
+                <% sections.forEach(section => { %>
+                <form action="/admin/edit-section" method="POST" class="mt-4">
+                    <input type="hidden" name="id" value="<%= section.id %>">
+                    <div class="form-group">
+                        <label for="sectionTitle<%= section.id %>">Titre de la section</label>
+                        <input type="text" class="form-control" id="sectionTitle<%= section.id %>" name="title" value="<%= section.title %>" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="sectionContent<%= section.id %>">Contenu de la section</label>
+                        <textarea class="form-control" id="sectionContent<%= section.id %>" name="content" required><%= section.content %></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="sectionImage<%= section.id %>">Image de la section</label>
+                        <input type="text" class="form-control" id="sectionImage<%= section.id %>" name="image" value="<%= section.image %>">
+                    </div>
+                    <div class="form-group">
+                        <label for="sectionPage<%= section.id %>">Page de la section</label>
+                        <input type="text" class="form-control" id="sectionPage<%= section.id %>" name="page" value="<%= section.page %>" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="sectionName<%= section.id %>">Nom de la section</label>
+                        <input type="text" class="form-control" id="sectionName<%= section.id %>" name="sectionName" value="<%= section.sectionName %>" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Modifier</button>
+                </form>
+                <form action="/admin/delete-section" method="POST" class="mt-2">
+                    <input type="hidden" name="id" value="<%= section.id %>">
+                    <button type="submit" class="btn btn-danger">Supprimer</button>
+                </form>
+                <hr>
+                <% }) %>
+            </main>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

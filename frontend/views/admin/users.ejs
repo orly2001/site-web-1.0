@@ -1,0 +1,23 @@
+<%- include('../partials/adminHeader', { title: 'Utilisateurs Inscrits - Dincosarl' }) %>
+<h1>Utilisateurs Inscrits</h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Nom</th>
+            <th>Email</th>
+            <th>Téléphone</th>
+            <th>Entreprise</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% users.forEach(user => { %>
+        <tr>
+            <td><%= user.firstName %> <%= user.lastName %></td>
+            <td><%= user.email %></td>
+            <td><%= user.phoneNumber %></td>
+            <td><%= user.company %></td>
+        </tr>
+        <% }) %>
+    </tbody>
+</table>
+<%- include('../partials/adminFooter') %>

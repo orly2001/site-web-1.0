@@ -1,0 +1,55 @@
+<%- include('../partials/adminHeader', { title: 'Gestion des Pages' }) %>
+<div class="container mt-5">
+    <h1 class="mb-4">Gestion des Pages</h1>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Accueil</h5>
+                    <a href="/admin/manage/home" class="btn btn-light">Gérer</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Projets</h5>
+                    <a href="/admin/manage/project" class="btn btn-light">Gérer</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-warning text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Services</h5>
+                    <a href="/admin/manage/service" class="btn btn-light">Gérer</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-danger text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Équipe</h5>
+                    <a href="/admin/manage/team" class="btn btn-light">Gérer</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Blog</h5>
+                    <a href="/admin/manage/blog" class="btn btn-light">Gérer</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-secondary text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Contactez-nous</h5>
+                    <a href="/admin/manage/contact-us" class="btn btn-light">Gérer</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<%- include('../partials/adminFooter') %>

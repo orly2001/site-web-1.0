@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="/admin/dashboard">Admin Dashboard</a>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/logout">Déconnexion</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container mt-5">
+        <h1 class="mb-4"><%= title %></h1>
+        <button class="btn btn-success mb-3" data-toggle="modal" data-target="#addSectionModal">Ajouter une section</button>
+
+        <!-- Add Project Button -->
+        <% if (page === 'project') { %>
+            <button class="btn btn-success mb-3" data-toggle="modal" data-target="#addProjectModal">Ajouter un projet</button>
+        <% } %>
+
+        <!-- Add Team Button -->
+        <% if (page === 'team') { %>
+            <button class="btn btn-success mb-3" data-toggle="modal" data-target="#addTeamModal">Ajouter une équipe</button>
+        <% } %>
+
+        <!-- Add Service Button -->
+        <% if (page === 'service') { %>
+            <button class="btn btn-success mb-3" data-toggle="modal" data-target="#addServiceModal">Ajouter un service</button>
+        <% } %>
+        <!-- Add About Button -->
+         <% if (page === 'about') { %>
+            <button class="btn btn-success mb-3" data-toggle="modal" data-target="#addBlogModal">Ajouter un article</button>
+        <% } %>
+        
+
+        <div class="row">
+            <% sections.forEach(section => { %>
+                <div class="col-md-4 mb-3">
+                    <div class="card">
+                        <img class="card-img-top" src="<%= section.image %>" alt="<%= section.title %>">
+                        <div class="card-body">
+                            <h5 class="card-title"><%= section.title %></h5>
+                            <p class="card-text"><%= section.content %></p>
+                            <button class="btn btn-primary" data-toggle="modal" data-target="#editSectionModal<%= section.id %>">Modifier</button>
+                            <form action="http://localhost:3000/admin/manage/delete-section" method="post" class="d-inline">
+                                <input type="hidden" name="id" value="<%= section.id %>">
+                                <input type="hidden" name="page" value="<%= page %>">
+                                <button type="submit" class="btn btn-danger">Supprimer</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Edit Section Modal -->
+                <div class="modal fade" id="editSectionModal<%= section.id %>" tabindex="-1" role="dialog" aria-labelledby="editSectionModalLabel<%= section.id %>" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="editSectionModalLabel<%= section.id %>">Modifier la section</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <form action="http://localhost:3000/admin/manage/edit-section" method="POST" enctype="multipart/form-data">
+                                <div class="modal-body">
+                                    <input type="hidden" name="id" value="<%= section.id %>">
+                                    <div class="form-group">
+                                        <label for="title">Titre</label>
+                                        <input type="text" class="form-control" name="title" value="<%= section.title %>" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="content">Contenu</label>
+                                        <textarea class="form-control" name="content" required><%= section.content %></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="image">Image</label>
+                                        <input type="file" class="form-control" name="image">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="page">Page</label>
+                                        <input type="text" class="form-control" name="page" value="<%= section.page %>" readonly>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="sectionName">Nom de la Section</label>
+                                        <select class="form-control" name="sectionName" required>
+                                            <% allSections.forEach(s => { %>
+                                                <option value="<%= s.sectionName %>"><%= s.sectionName %></option>
+                                            <% }) %>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-primary">Enregistrer</button>
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            <% }) %>
+        </div>
+
+        <% if (page === 'team' && teams) { %>
+            <div class="row mt-5">
+                <h2>Équipe</h2>
+                <% teams.forEach(team => { %>
+                    <div class="col-md-4 mb-3">
+                        <div class="card">
+                            <img class="card-img-top" src="<%= team.image %>" alt="<%= team.name %>">
+                            <div class="card-body">
+                                <h5 class="card-title"><%= team.name %></h5>
+                                <p class="card-text"><%= team.role %></p>
+                                <button class="btn btn-primary" data-toggle="modal" data-target="#editTeamModal<%= team.id %>">Modifier</button>
+                                <form action="/admin/manage/delete-team" method="post" class="d-inline">
+                                    <input type="hidden" name="id" value="<%= team.id %>">
+                                    <input type="hidden" name="page" value="<%= page %>">
+                                    <button type="submit" class="btn btn-danger">Supprimer</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Edit Team Modal -->
+                    <div class="modal fade" id="editTeamModal<%= team.id %>" tabindex="-1" role="dialog" aria-labelledby="editTeamModalLabel<%= team.id %>" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="editTeamModalLabel<%= team.id %>">Modifier l'équipe</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <form action="http://localhost:3000/admin/manage/edit-team" method="POST" enctype="multipart/form-data">
+                                    <div class="modal-body">
+                                        <input type="hidden" name="id" value="<%= team.id %>">
+                                        <div class="form-group">
+                                            <label for="name">Nom</label>
+                                            <input type="text" class="form-control" name="name" value="<%= team.name %>" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="role">Rôle</label>
+                                            <input type="text" class="form-control" name="role" value="<%= team.role %>" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="image">Image</label>
+                                            <input type="file" class="form-control" name="image">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="facebook">Facebook</label>
+                                            <input type="text" class="form-control" name="facebook" value="<%= team.facebook %>">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="instagram">Instagram</label>
+                                            <input type="text" class="form-control" name="instagram" value="<%= team.instagram %>">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="twitter">Twitter</label>
+                                            <input type="text" class="form-control" name="twitter" value="<%= team.twitter %>">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="github">Github</label>
+                                            <input type="text" class="form-control" name="github" value="<%= team.github %>">
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="submit" class="btn btn-primary">Enregistrer</button>
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                <% }) %>
+            </div>
+        <% } %>
+
+        <% if (page === 'service' && services) { %>
+            <div class="row mt-5">
+                <h2>Services</h2>
+                <% services.forEach(service => { %>
+                    <div class="col-md-4 mb-3">
+                        <div class="card">
+                            <img class="card-img-top" src="<%= service.image %>" alt="<%= service.title %>">
+                            <div class="card-body">
+                                <h5 class="card-title"><%= service.title %></h5>
+                                <p class="card-text"><%= service.description %></p>
+                                <button class="btn btn-primary" data-toggle="modal" data-target="#editServiceModal<%= service.id %>">Modifier</button>
+                                <form action="/admin/manage/delete-service" method="post" class="d-inline">
+                                    <input type="hidden" name="id" value="<%= service.id %>">
+                                    <input type="hidden" name="page" value="<%= page %>">
+                                    <button type="submit" class="btn btn-danger">Supprimer</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Edit Service Modal -->
+                    <div class="modal fade" id="editServiceModal<%= service.id %>" tabindex="-1" role="dialog" aria-labelledby="editServiceModalLabel<%= service.id %>" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="editServiceModalLabel<%= service.id %>">Modifier le service</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <form action="/admin/manage/edit-service" method="post" enctype="multipart/form-data">
+                                    <div class="modal-body">
+                                        <input type="hidden" name="id" value="<%= service.id %>">
+                                        <div class="form-group">
+                                            <label for="title">Titre</label>
+                                            <input type="text" class="form-control" name="title" value="<%= service.title %>" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="description">Description</label>
+                                            <textarea class="form-control" name="description" required><%= service.description %></textarea>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="image">Image</label>
+                                            <input type="file" class="form-control" name="image">
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="submit" class="btn btn-primary">Enregistrer</button>
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                <% }) %>
+            </div>
+        <% } %>
+
+        <% if (page === 'project' && projects) { %>
+            <div class="row mt-5">
+                <h2>Projets</h2>
+                <% projects.forEach(project => { %>
+                    <div class="col-md-4 mb-3">
+                        <div class="card">
+                            <img class="card-img-top" src="<%= project.mainImage %>" alt="<%= project.title %>">
+                            <div class="card-body">
+                                <h5 class="card-title"><%= project.title %></h5>
+                                <p class="card-text"><%= project.description %></p>
+                                <p>Status: <%= project.status %></p>
+                                <p>Début: <%= project.startDate.toLocaleDateString() %></p>
+                                <p>Fin: <%= project.endDate ? project.endDate.toLocaleDateString() : 'En cours' %></p>
+                                <button class="btn btn-primary" data-toggle="modal" data-target="#editProjectModal<%= project.id %>">Modifier</button>
+                                <form action="/admin/manage/delete-project" method="post" class="d-inline">
+                                    <input type="hidden" name="id" value="<%= project.id %>">
+                                    <input type="hidden" name="page" value="<%= page %>">
+                                    <button type="submit" class="btn btn-danger">Supprimer</button>
+                                </form>
+                                <div id="carousel<%= project.id %>" class="carousel slide" data-ride="carousel">
+                                    <ol class="carousel-indicators">
+                                        <% project.images.forEach((image, index) => { %>
+                                            <li data-target="#carousel<%= project.id %>" data-slide-to="<%= index %>" class="<%= index === 0 ? 'active' : '' %>"></li>
+                                        <% }) %>
+                                    </ol>
+                                    <div class="carousel-inner">
+                                        <% project.images.forEach((image, index) => { %>
+                                            <div class="carousel-item <%= index === 0 ? 'active' : '' %>">
+                                                <img class="d-block w-100" src="<%= image.imageUrl %>" alt="Image <%= index + 1 %>">
+                                            </div>
+                                        <% }) %>
+                                    </div>
+                                    <a class="carousel-control-prev" href="#carousel<%= project.id %>" role="button" data-slide="prev">
+                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                        <span class="sr-only">Previous</span>
+                                    </a>
+                                    <a class="carousel-control-next" href="#carousel<%= project.id %>" role="button" data-slide="next">
+                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                        <span class="sr-only">Next</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Edit Project Modal -->
+                    <div class="modal fade" id="editProjectModal<%= project.id %>" tabindex="-1" role="dialog" aria-labelledby="editProjectModalLabel<%= project.id %>" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="editProjectModalLabel<%= project.id %>">Modifier le projet</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <form action="/admin/manage/edit-project" method="post" enctype="multipart/form-data">
+                                    <div class="modal-body">
+                                        <input type="hidden" name="id" value="<%= project.id %>">
+                                        <div class="form-group">
+                                            <label for="title">Titre</label>
+                                            <input type="text" class="form-control" name="title" value="<%= project.title %>" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="description">Description</label>
+                                            <textarea class="form-control" name="description" required><%= project.description %></textarea>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="mainImage">Image principale</label>
+                                            <input type="file" class="form-control" name="mainImage">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="status">Statut</label>
+                                            <input type="text" class="form-control" name="status" value="<%= project.status %>" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="startDate">Date de début</label>
+                                            <input type="date" class="form-control" name="startDate" value="<%= project.startDate ? project.startDate.toISOString().split('T')[0] : '' %>" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="endDate">Date de fin</label>
+                                            <input type="date" class="form-control" name="endDate" value="<%= project.endDate ? project.endDate.toISOString().split('T')[0] : '' %>">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="images">Images secondaires</label>
+                                            <input type="file" class="form-control" name="images" multiple>
+                                            <small class="form-text text-muted">Sélectionnez les images secondaires.</small>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="submit" class="btn btn-primary">Enregistrer</button>
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                <% }) %>
+            </div>
+        <% } %>
+    </div>
+
+    <!-- Add Section Modal -->
+    <div class="modal fade" id="addSectionModal" tabindex="-1" role="dialog" aria-labelledby="addSectionModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addSectionModalLabel">Ajouter une section</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form action="/admin/manage/add-section" method="post" enctype="multipart/form-data">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="title">Titre</label>
+                            <input type="text" class="form-control" name="title" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="content">Contenu</label>
+                            <textarea class="form-control" name="content" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="image">Image</label>
+                            <input type="file" class="form-control" name="image" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="page">Page</label>
+                            <input type="text" class="form-control" name="page" value="<%= page %>" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="sectionName">Nom de la Section</label>
+                            <select class="form-control" name="sectionName" required>
+                                <% allSections.forEach(s => { %>
+                                    <option value="<%= s.sectionName %>"><%= s.sectionName %></option>
+                                <% }) %>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Ajouter</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Project Modal -->
+    <% if (page === 'project') { %>
+        <div class="modal fade" id="addProjectModal" tabindex="-1" role="dialog" aria-labelledby="addProjectModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addProjectModalLabel">Ajouter un projet</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form action="/admin/manage/add-project" method="post" enctype="multipart/form-data">
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="title">Titre</label>
+                                <input type="text" class="form-control" name="title" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="description">Description</label>
+                                <textarea class="form-control" name="description" required></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="mainImage">Image principale</label>
+                                <input type="file" class="form-control" name="mainImage" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="status">Statut</label>
+                                <input type="text" class="form-control" name="status" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="startDate">Date de début</label>
+                                <input type="date" class="form-control" name="startDate" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="endDate">Date de fin</label>
+                                <input type="date" class="form-control" name="endDate">
+                            </div>
+                            <div class="form-group">
+                                <label for="images">Images secondaires</label>
+                                <input type="file" class="form-control" name="images" multiple>
+                                <small class="form-text text-muted">Sélectionnez les images secondaires.</small>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Ajouter</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    <% } %>
+
+    <!-- Add Team Modal -->
+    <% if (page === 'team') { %>
+        <div class="modal fade" id="addTeamModal" tabindex="-1" role="dialog" aria-labelledby="addTeamModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addTeamModalLabel">Ajouter une équipe</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form action="/admin/manage/add-team" method="post" enctype="multipart/form-data">
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="name">Nom</label>
+                                <input type="text" class="form-control" name="name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="role">Rôle</label>
+                                <input type="text" class="form-control" name="role" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="image">Image</label>
+                                <input type="file" class="form-control" name="image" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="facebook">Facebook</label>
+                                <input type="text" class="form-control" name="facebook">
+                            </div>
+                            <div class="form-group">
+                                <label for="instagram">Instagram</label>
+                                <input type="text" class="form-control" name="instagram">
+                            </div>
+                            <div class="form-group">
+                                <label for="twitter">Twitter</label>
+                                <input type="text" class="form-control" name="twitter">
+                            </div>
+                            <div class="form-group">
+                                <label for="github">Github</label>
+                                <input type="text" class="form-control" name="github">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Ajouter</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    <% } %>
+
+    <!-- Add Service Modal -->
+    <% if (page === 'service') { %>
+        <div class="modal fade" id="addServiceModal" tabindex="-1" role="dialog" aria-labelledby="addServiceModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addServiceModalLabel">Ajouter un service</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form action="/admin/manage/add-service" method="post" enctype="multipart/form-data">
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="title">Titre</label>
+                                <input type="text" class="form-control" name="title" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="description">Description</label>
+                                <textarea class="form-control" name="description" required></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="image">Image</label>
+                                <input type="file" class="form-control" name="image" required>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Ajouter</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    <% } %>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+<%- include('../partials/adminHeader', { title: 'Contacts - Dincosarl' }) %>
+<h1>Contacts</h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Nom</th>
+            <th>Email</th>
+            <th>Type de Projet</th>
+            <th>Message</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% contacts.forEach(contact => { %>
+        <tr>
+            <td><%= contact.name %></td>
+            <td><%= contact.email %></td>
+            <td><%= contact.projectType %></td>
+            <td><%= contact.message %></td>
+        </tr>
+        <% }) %>
+    </tbody>
+</table>
+<%- include('../partials/adminFooter') %>

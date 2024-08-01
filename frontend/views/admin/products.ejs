@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des Produits - Dincosarl</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <%- include('../partials/adminHeader', { title: 'Gestion des Produits - Dincosarl' }) %>
+    <div class="container mt-5">
+        <h1 class="mb-4">Gestion des Produits</h1>
+        <button class="btn btn-success mb-3" data-toggle="modal" data-target="#addProductModal">Ajouter un Produit</button>
+
+        <h2 class="mt-5">Liste des Produits</h2>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Titre</th>
+                    <th>Page</th>
+                    <th>Parent ID</th>
+                    <th>Position</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% products.forEach(product => { %>
+                    <tr>
+                        <td><%= product.title %></td>
+                        <td><%= product.page %></td>
+                        <td><%= product.parent_id %></td>
+                        <td><%= product.position %></td>
+                        <td>
+                            <button class="btn btn-warning" data-toggle="modal" data-target="#editProductModal<%= product.id %>">Modifier</button>
+                            <form action="/admin/manage/delete-product" method="POST" class="d-inline">
+                                <input type="hidden" name="id" value="<%= product.id %>">
+                                <button type="submit" class="btn btn-danger">Supprimer</button>
+                            </form>
+                        </td>
+                    </tr>
+
+                    <!-- Edit Product Modal -->
+                    <div class="modal fade" id="editProductModal<%= product.id %>" tabindex="-1" role="dialog" aria-labelledby="editProductModalLabel<%= product.id %>" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="editProductModalLabel<%= product.id %>">Modifier le Produit</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <form action="/admin/manage/edit-product" method="POST">
+                                    <div class="modal-body">
+                                        <input type="hidden" name="id" value="<%= product.id %>">
+                                        <div class="form-group">
+                                            <label for="title">Titre</label>
+                                            <input type="text" class="form-control" id="title" name="title" value="<%= product.title %>" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="content">Contenu</label>
+                                            <textarea class="form-control" id="content" name="content" rows="3" required><%= product.content %></textarea>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="image">Image (URL)</label>
+                                            <input type="text" class="form-control" id="image" name="image" value="<%= product.image %>">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="page">Page</label>
+                                            <input type="text" class="form-control" id="page" name="page" value="<%= product.page %>" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="parent_id">ID Parent</label>
+                                            <input type="number" class="form-control" id="parent_id" name="parent_id" value="<%= product.parent_id %>">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="position">Position</label>
+                                            <select class="form-control" id="position" name="position" required>
+                                                <option value="main" <%= product.position === 'main' ? 'selected' : '' %>>Main</option>
+                                                <option value="sub" <%= product.position === 'sub' ? 'selected' : '' %>>Sub</option>
+                                                <option value="child" <%= product.position === 'child' ? 'selected' : '' %>>Child</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="submit" class="btn btn-primary">Enregistrer</button>
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                <% }) %>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Add Product Modal -->
+    <div class="modal fade" id="addProductModal" tabindex="-1" role="dialog" aria-labelledby="addProductModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addProductModalLabel">Ajouter un Produit</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form action="/admin/manage/add-product" method="POST">
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="title">Titre</label>
+                            <input type="text" class="form-control" id="title" name="title" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="content">Contenu</label>
+                            <textarea class="form-control" id="content" name="content" rows="3" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="image">Image (URL)</label>
+                            <input type="text" class="form-control" id="image" name="image">
+                        </div>
+                        <div class="form-group">
+                            <label for="page">Page</label>
+                            <input type="text" class="form-control" id="page" name="page" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="parent_id">ID Parent</label>
+                            <input type="number" class="form-control" id="parent_id" name="parent_id">
+                        </div>
+                        <div class="form-group">
+                            <label for="position">Position</label>
+                            <select class="form-control" id="position" name="position" required>
+                                <option value="main">Main</option>
+                                <option value="sub">Sub</option>
+                                <option value="child">Child</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Ajouter</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <%- include('../partials/adminFooter') %>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

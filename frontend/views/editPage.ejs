@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modifier Page</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Modifier Page</h1>
+        <div class="form-group">
+            <label for="page-select">Sélectionner une Page</label>
+            <select id="page-select" class="form-control">
+                <option value="" disabled selected>Choisir une page</option>
+                <% pages.forEach(page => { %>
+                    <option value="<%= page.page %>"><%= page.page %></option>
+                <% }) %>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="section-select">Sélectionner une Section</label>
+            <select id="section-select" class="form-control">
+                <!-- Sections seront chargées dynamiquement ici -->
+            </select>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#page-select').on('change', function () {
+                const page = $(this).val();
+                $.ajax({
+                    url: '/api/sections',
+                    method: 'GET',
+                    data: { page },
+                    success: function (sections) {
+                        const sectionSelect = $('#section-select');
+                        sectionSelect.empty();
+                        sectionSelect.append('<option value="" disabled selected>Choisir une section</option>');
+                        sections.forEach(section => {
+                            sectionSelect.append(`<option value="${section.sectionName}">${section.sectionName}</option>`);
+                        });
+                    },
+                    error: function () {
+                        alert('Erreur lors de la récupération des sections');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

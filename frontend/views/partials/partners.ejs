@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nos Partenaires</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="mb-4">Nos Partenaires de Confiance</h1>
+        <section class="partners section-padding">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h2 class="text-center partner-heading">Nos Partenaires de Confiance</h2>
+                    </div>
+                </div>
+                <div class="row mt-5" id="partners-list">
+                    <!-- Les partenaires seront injectés ici par JavaScript -->
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script>
+        async function fetchPartners() {
+            try {
+                const response = await fetch('http://localhost:3000/admin/partnersJson');
+                const partners = await response.json();
+                const partnersList = document.getElementById('partners-list');
+
+                partners.forEach(partner => {
+                    const partnerDiv = document.createElement('div');
+                    partnerDiv.className = 'col-lg-3 col-md-6 d-flex justify-content-center';
+                    partnerDiv.innerHTML = `
+                        <div class="partner">
+                            <img src="http://localhost:3000${partner.image}" alt="${partner.name}" class="img-fluid">
+                        </div>
+                    `;
+                    partnersList.appendChild(partnerDiv);
+                });
+            } catch (error) {
+                console.error('Erreur lors de la récupération des partenaires:', error);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', fetchPartners);
+    </script>
+</body>
+</html>

@@ -1,0 +1,29 @@
+#wrapper {
+    display: flex;
+    flex-direction: row-reverse;
+}
+
+#sidebar-wrapper {
+    min-height: 100vh;
+    max-width: 250px;
+}
+
+#page-content-wrapper {
+    width: 100%;
+}
+
+.toggled #sidebar-wrapper {
+    display: none;
+}
+
+.card {
+    margin: 10px;
+}
+
+.navbar-nav .nav-link {
+    padding: 15px;
+}
+
+.navbar-brand img {
+    height: 50px;
+}

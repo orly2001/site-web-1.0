@@ -1,0 +1,23 @@
+.process-block {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.process-block img {
+    max-width: 100px;
+    margin-bottom: 15px;
+}
+
+.process-block h3 {
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.process-block p {
+    font-size: 16px;
+}
+
+.carousel-item {
+    display: flex;
+    justify-content: center;
+}

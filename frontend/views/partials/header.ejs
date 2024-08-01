@@ -1,0 +1,107 @@
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <!-- Adding Stylesheets -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/responsive.css">
+</head>
+
+<body>
+    <!-- Header Start  -->
+    <section class="header">
+        <!-- Header Navigation Start  -->
+        <div class="container header-nav">
+            <div class="row">
+                <div class="col-md-12">
+                    <nav class="navbar navbar-expand-lg navbar-light bg-light main-menu fixed-top">
+                        <div class="container">
+                            <a href="/" class="navbar-brand">
+                                <img src="/images/Logo.png" alt="DincosarlLogo">
+                            </a>
+                            <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarNav">
+                                <span class="navbar-toggler-icon"><i class="fa fa-bars"></i></span>
+                            </button>
+                            <div class="collapse navbar-collapse" id="navbarNav">
+                                <ul class="navbar-nav ml-auto">
+                                    <li class="nav-item"><a href="/" class="nav-link">Accueil</a></li>
+                                    <li class="nav-item"><a href="/contact-us" class="nav-link">À propos</a></li>
+                                    <li class="nav-item dropdown">
+                                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownProduits" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            Produits
+                                        </a>
+                                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownProduits">
+                                            <% productsCategories.forEach(category => { %>
+                                                <li class="dropdown-submenu">
+                                                    <a class="dropdown-item dropdown-toggle" href="#"><%= category.name %></a>
+                                                    <ul class="dropdown-menu">
+                                                        <% category.products.forEach(product => { %>
+                                                            <li><a class="dropdown-item" href="/admin/products/<%= product.page %>/<%= product.id %>"><%= product.title %></a></li>
+                                                        <% }) %>
+                                                    </ul>
+                                                </li>
+                                            <% }) %>
+                                        </ul>
+                                    </li>
+                                    <li class="nav-item"><a href="/project" class="nav-link">Projet</a></li>
+                                    <li class="nav-item"><a href="/service" class="nav-link">Service</a></li>
+                                    <li class="nav-item"><a href="/team" class="nav-link">Équipe</a></li>
+                                    <li class="nav-item"><a href="/blog" class="nav-link">Blog</a></li>
+                                    
+                                    <li class="nav-item">
+                                        <a href="/contact-us" class="nav-link">
+                                            <button class="nav-button">Contactez-nous <i class="fas fa-angle-right"></i></button>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="/login" class="nav-link">
+                                            <button class="nav-button">Connexion <i class="fas fa-sign-in-alt"></i></button>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="https://wa.me/+237678473646" target="_blank" class="whatsapp-link">
+                                            <i class="fab fa-whatsapp"></i> WhatsApp
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </nav>
+                </div>
+            </div>
+        </div>
+        <!-- Header Navigation End  -->
+    </section>
+    <!-- Header End  -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Fermer les menus ouverts lorsqu'on clique en dehors
+            $(document).click(function(event) {
+                var clickover = $(event.target);
+                var $navbar = $(".navbar-collapse");               
+                if (!clickover.closest('.navbar').length && $navbar.hasClass('show')) {
+                    $navbar.collapse('hide');
+                }
+            });
+
+            // Fonctionnalité des sous-menus déroulants
+            $('.dropdown-submenu a.dropdown-toggle').on("click", function(e) {
+                var $submenu = $(this).next('ul');
+                var $siblings = $(this).parents('.dropdown-menu').find('.dropdown-submenu ul').not($submenu);
+                $siblings.hide();
+                $submenu.toggle();
+                e.stopPropagation();
+                e.preventDefault();
+            });
+        });
+    </script>
+</body>
+
+</html>
